@@ -7,9 +7,10 @@
         <title>Number Connections</title>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="../style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
     </head>
     <body>
-        <h1>Connections: oops, all numbers!</h1>
+        <h1>Connections: oops! all numbers</h1>
         <p>Make four groups of four.</p>
         <noscript>This game needs JavaScript.</noscript>
         <div id="grid" role="group" aria-label="Number tiles"></div>
@@ -23,9 +24,13 @@
         <script>
             (function () {
                 const today = new Date();
-                const dayNumber = Math.floor(
-                    Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000
-                );
+                const y = today.getFullYear();
+                const m = today.getMonth();
+                const d = today.getDate();
+
+                window.PUZZLE_DATE_KEY = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+
+                const dayNumber = Math.floor(Date.UTC(y, m, d) / 86400000);
                 const index = ((dayNumber % PUZZLE_POOL_SIZE) + PUZZLE_POOL_SIZE) % PUZZLE_POOL_SIZE;
                 const name = String(index).padStart(PUZZLE_INDEX_WIDTH, "0");
 

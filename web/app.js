@@ -10,6 +10,31 @@ const submitBtn = document.getElementById("submit-btn");
 const mistakesEl = document.getElementById("mistakes");
 const messageEl = document.getElementById("message");
 
+const STORAGE_KEY = "connections-progress-" + (window.PUZZLE_DATE_KEY || "unknown");
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (!Array.isArray(data.solvedOrder) || typeof data.mistakes !== "number") return null;
+    return data;
+  } catch (e) {
+    return null;
+  }
+}
+
+function saveProgress() {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ solvedOrder: Array.from(solvedGroups), mistakes })
+    );
+  } catch (e) {
+    // localStorage unavailable (private browsing, quota, etc.) -- just skip persisting.
+  }
+}
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -124,6 +149,7 @@ function onSubmit() {
       showMessage("You win!");
       endGame();
     }
+    saveProgress();
     return;
   }
 
@@ -137,11 +163,36 @@ function onSubmit() {
   }
 
   if (mistakes >= MISTAKES_ALLOWED) {
-    showMessage("Out of guesses — here are the remaining groups.");
+    showMessage("Out of guesses!");
+    revealRemainingGroups();
+    endGame();
+  }
+  saveProgress();
+}
+
+function restoreProgress() {
+  const data = loadProgress();
+  if (!data) return;
+
+  data.solvedOrder.forEach((groupIndex) => {
+    document.querySelectorAll(`.tile[data-group="${groupIndex}"]`).forEach((t) => t.remove());
+    solvedGroups.add(groupIndex);
+    insertSolvedRow(groupIndex);
+  });
+
+  mistakes = data.mistakes;
+  mistakesEl.textContent = `Mistakes: ${mistakes}/${MISTAKES_ALLOWED}`;
+
+  if (solvedGroups.size === PUZZLE.groups.length) {
+    showMessage("You win!");
+    endGame();
+  } else if (mistakes >= MISTAKES_ALLOWED) {
+    showMessage("Out of guesses!");
     revealRemainingGroups();
     endGame();
   }
 }
 
 buildTiles();
+restoreProgress();
 submitBtn.addEventListener("click", onSubmit);
