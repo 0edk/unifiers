@@ -45,8 +45,9 @@ def main() -> None:
         for entry in results:
             a_number = f"A{entry['number']:06d}"
             terms = [int(t) for t in entry["data"].split(",") if t.strip()]
-            terms_in_range = sorted({t for t in terms if RANGE_LO <= t <= RANGE_HI})
-            if len(terms_in_range) < MIN_TERMS_IN_RANGE:
+            raw_terms_in_range = [t for t in terms if RANGE_LO <= t <= RANGE_HI]
+            terms_in_range = sorted(set(raw_terms_in_range))
+            if len(terms_in_range) < MIN_TERMS_IN_RANGE or len(terms_in_range) < len(raw_terms_in_range):
                 continue
             sequences[a_number] = {"name": entry["name"], "terms_2_99": terms_in_range}
         if page < MAX_PAGES - 1:
