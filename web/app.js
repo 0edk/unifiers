@@ -9,7 +9,6 @@ const gridEl = document.getElementById("grid");
 const submitBtn = document.getElementById("submit-btn");
 const mistakesEl = document.getElementById("mistakes");
 const messageEl = document.getElementById("message");
-const solvedGroupsEl = document.getElementById("solved-groups");
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -66,11 +65,28 @@ function clearSelection() {
   submitBtn.disabled = true;
 }
 
-function addSolvedGroupLine(groupIndex, { revealed = false } = {}) {
-  const line = document.createElement("div");
-  line.textContent = PUZZLE.groups[groupIndex].label;
-  if (revealed) line.classList.add("revealed");
-  solvedGroupsEl.appendChild(line);
+function buildSolvedRow(groupIndex, { revealed = false } = {}) {
+  const group = PUZZLE.groups[groupIndex];
+  const members = [...group.members].sort((a, b) => a - b);
+
+  const row = document.createElement("button");
+  row.className = "tile solved-row";
+  row.classList.add(revealed ? "revealed" : "solved");
+  row.disabled = true;
+  row.textContent = `${group.label}\n${members.join(", ")}`;
+  return row;
+}
+
+function insertSolvedRow(groupIndex, options) {
+  const row = buildSolvedRow(groupIndex, options);
+  const firstUnsolvedTile = Array.from(gridEl.children).find(
+    (el) => !el.classList.contains("solved-row")
+  );
+  if (firstUnsolvedTile) {
+    gridEl.insertBefore(row, firstUnsolvedTile);
+  } else {
+    gridEl.appendChild(row);
+  }
 }
 
 function endGame() {
@@ -83,10 +99,8 @@ function endGame() {
 function revealRemainingGroups() {
   for (let g = 0; g < PUZZLE.groups.length; g++) {
     if (solvedGroups.has(g)) continue;
-    document.querySelectorAll(`.tile[data-group="${g}"]`).forEach((t) => {
-      t.classList.add("solved");
-    });
-    addSolvedGroupLine(g, { revealed: true });
+    document.querySelectorAll(`.tile[data-group="${g}"]`).forEach((t) => t.remove());
+    insertSolvedRow(g, { revealed: true });
   }
 }
 
@@ -100,9 +114,9 @@ function onSubmit() {
 
   if (bestCount === 4) {
     const groupIndex = Number(bestGroup);
-    selectedTiles.forEach((tile) => tile.classList.add("solved"));
+    selectedTiles.forEach((tile) => tile.remove());
     solvedGroups.add(groupIndex);
-    addSolvedGroupLine(groupIndex);
+    insertSolvedRow(groupIndex);
     selectedTiles = [];
     submitBtn.disabled = true;
 
@@ -121,8 +135,6 @@ function onSubmit() {
   } else {
     showMessage("Not a match", { transient: true });
   }
-
-  clearSelection();
 
   if (mistakes >= MISTAKES_ALLOWED) {
     showMessage("Out of guesses — here are the remaining groups.");
