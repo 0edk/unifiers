@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Generate puzzles
-        run: gen/generate_puzzle_pool.py
+        run: python3 gen/generate_puzzle_pool.py
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
