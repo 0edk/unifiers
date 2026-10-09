@@ -1,0 +1,38 @@
+body {
+  max-width: 30em;
+  margin: 2em auto;
+  text-align: center;
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5em;
+  margin: 1em 0;
+}
+
+.tile.selected {
+  outline: 3px solid;
+  font-weight: bold;
+}
+
+.tile.solved {
+  opacity: 0.4;
+}
+
+.controls {
+  margin: 1em 0;
+}
+
+#solved-groups div {
+  margin-bottom: 0.3em;
+}
+
+#solved-groups .revealed {
+  opacity: 0.6;
+}
+
+footer {
+  margin-top: 2em;
+  font-size: 0.85em;
+}

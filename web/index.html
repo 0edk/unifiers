@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Number Connections</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Number Connections</h1>
+<p class="instructions">Find groups of 4 numbers that share a hidden connection.</p>
+
+<div id="message" class="message"></div>
+
+<div id="grid"></div>
+
+<div class="controls">
+  <button id="submit-btn" disabled>Submit</button>
+  <span id="mistakes">Mistakes: 0/4</span>
+</div>
+
+<div id="solved-groups"></div>
+
+<footer>Sequence data from <a href="https://oeis.org" target="_blank" rel="noopener">OEIS (oeis.org)</a>.</footer>
+
+<script src="puzzle.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
