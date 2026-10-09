@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate one Connections-style puzzle from the local OEIS core-sequence archive.
+"""Shared puzzle-building logic, plus a CLI to preview one sample puzzle.
 
-Run on demand:
+Run on demand to eyeball a single puzzle (prints only, writes nothing):
 
     python3 gen/generate_puzzle.py
 
-Reads gen/data/core_sequences.json (built once by fetch_archive.py) and writes web/puzzle.js,
-overwriting any previous puzzle. Re-run this script to get a different puzzle.
+The actual puzzle pool used by the web app is produced by gen/generate_puzzle_pool.py,
+which imports load_archive/try_build_puzzle/clean_label from this module.
 """
 import json
 import random
@@ -14,7 +14,6 @@ import re
 from pathlib import Path
 
 ARCHIVE_PATH = Path(__file__).parent / "data" / "core_sequences.json"
-OUTPUT_PATH = Path(__file__).parent.parent / "web" / "puzzle.js"
 NUM_GROUPS = 4
 GROUP_SIZE = 4
 MAX_ATTEMPTS = 10000
@@ -111,10 +110,6 @@ def main() -> None:
     rng = random.Random()
     groups = generate_puzzle(archive, rng)
 
-    js = "const PUZZLE = " + json.dumps({"groups": groups}, indent=2) + ";\n"
-    OUTPUT_PATH.write_text(js)
-
-    print(f"Wrote puzzle to {OUTPUT_PATH}")
     for g in groups:
         print(f"  {g['label']}: {g['members']}")
 
