@@ -1,28 +1,30 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Number Connections</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<h1>Number Connections</h1>
-<p class="instructions">Find groups of 4 numbers that share a hidden connection.</p>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="light dark">
+        <title>Number Connections</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="../../neopublicity/style.css">
+    </head>
+    <body>
+        <h1>Connections: oops, all numbers!</h1>
+        <p>Make four groups of four.</p>
+        <noscript>This game needs JavaScript.</noscript>
 
-<div id="message" class="message"></div>
+        <div id="grid" role="group" aria-label="Number tiles"></div>
 
-<div id="grid"></div>
+        <div class="controls">
+            <button type="button" id="submit-btn" disabled>Submit</button>
+            <span id="mistakes" role="status" aria-live="polite">Mistakes: 0/4</span>
+        </div>
 
-<div class="controls">
-  <button id="submit-btn" disabled>Submit</button>
-  <span id="mistakes">Mistakes: 0/4</span>
-</div>
+        <div id="message" class="message" role="status" aria-live="polite"></div>
 
-<div id="solved-groups"></div>
+        <footer>Data from <a href="https://oeis.org">OEIS (oeis.org)</a>.</footer>
 
-<footer>Sequence data from <a href="https://oeis.org" target="_blank" rel="noopener">OEIS (oeis.org)</a>.</footer>
-
-<script src="puzzle.js"></script>
-<script src="app.js"></script>
-</body>
+        <script src="puzzle.js"></script>
+        <script src="app.js"></script>
+    </body>
 </html>

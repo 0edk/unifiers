@@ -16,23 +16,11 @@ body {
   font-weight: bold;
 }
 
-.tile.solved {
-  opacity: 0.4;
+.tile.solved-row {
+  grid-column: 1 / -1;
+  white-space: pre-line;
 }
 
 .controls {
   margin: 1em 0;
-}
-
-#solved-groups div {
-  margin-bottom: 0.3em;
-}
-
-#solved-groups .revealed {
-  opacity: 0.6;
-}
-
-footer {
-  margin-top: 2em;
-  font-size: 0.85em;
 }
